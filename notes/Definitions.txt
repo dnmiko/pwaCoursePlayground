@@ -1,0 +1,14 @@
+/*----- What are Progressive Web Apps? -----*/
+    - Series of technologies and features we can add to any web application to enhance it.
+    - Buscamos que funcionen mas cómo aplicaciones nativas
+    - Estas aplicaciones web siguen funcionando de manera correcta en browsers antiguos
+    - Reliable = Load fast and provide offline functionality
+    - Fast = Respond quickly to user actions
+    - Engaging = Feel like a native app on mobile devices
+
+/*----- Core building blocks -----*/
+    - Service Workers = They are basically JS running in a background process, even if the application is closed. Nos permiten configurar las estrategias de caché para ofrecer funcionalidades offline, background sync para trabajar sin conexión y enviar los cambios al servidor apenas se vuelva a conectar al internet, push notifications 
+    - Application Manifest = Allows addition to Homescreen
+    - Responsive design
+    - Geolocation API and Media API
+    - 
