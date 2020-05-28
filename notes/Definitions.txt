@@ -11,4 +11,65 @@
     - Application Manifest = Allows addition to Homescreen
     - Responsive design
     - Geolocation API and Media API
+
+/*----- Progressive Enhancement -----*/
+    - No significa que para convertir una aplicación web cualquiera (ya sea en viejas tecnologías o nuevas) se tiene que reescribir la aplicación.
+    - Se pueden aplicar solamente algunas de todas las funcionalidades que componen a una PWA y construir sobre lo que ya se tiene
+
+/*----- Application Manifest -----*/
+    - Es un archivo que permite instalar la aplicación con un ícono en el homepage de los dispositivos móviles como si fuera una aplicación nativa.
+    - Este archivo manifest debe ser llamado desde cada uno de los distintos archivos o páginas que tengamos. En el caso de una SPA como en React, sólo debe agregarse en el archivo que manda a llamar a todos los demás.
+    - Algunas de las propiedades que podemos agregar en el manifest son:
+        + name. Define el nombre largo de la aplicación web, es el que se mostrará en el Splash screen
+        + short_name. Es el nombre que se mostrará debajo del ícono de aplicación en el homepage
+        + start_url. La ubicación que se abrirá cada vez que la aplicación web se abra desde el ícono de Homescreen
+        + scope. Se refiere a las páginas que utilizarán la experiencia PWA, es decir, aquellas que utilizarán la configuración definida en este manifest. Al poner un punto (.) se refiere a que todas las vistas deben aplicar la configuración.
+        + display. Define cómo se ve la aplicación web. Standalone es la opción por default y define que NO se mostrará como dentro del web browser, desaparece la URL y los controles del navegador
+        + background_color. Define el color que mostrará en el background de la aplicación mientras carga, por ejemplo, en el Splashscreen
+        + theme_color. El color que tiene la parte superior de la aplicación en el task manager.
+        + description.
+        + dir. Define la dirección de lectura de la aplicación. Por default debería ser ltr (left-to-right), pero si la aplicación está destinada a paises donde se lea de derecha a izquierda, se puede modificar.
+        + lang. Define el lenguaje default de la aplicación
+        + orientation. Define la orientación default de la aplicación cuando se abra desde el ícono de homepage. portrait-primary define que se abra en portrait, sin embargo, debemos asegurarnos de que abra correctamente en ambos escenarios.
+        + icons. Arreglo de los posibles íconos que el navegador puede decidir utilizar en caso de que la aplicación se instalada en el homescreen del dispositivo. Es un arreglo de jsons definiendo el src de los íconos.
+        + related_applications. Arreglo de distintas aplicaciones relacionadas, que pueden ser nativas. Arrego de Jsons conteniendo la información necesaria para ejecutar la aplicación.
+
+/*----- Prerrequisites to install de Web App -----*/
+    - La aplicación debe cumplir con algunos pre-requisitos para poder ser instalada en el dispotivo móvil, entre ellos:
+        + Tener un short_name en el manifest
+        + Tener un name en el manifest
+        + Un ícono de 144x144
+        + Tener un start_url en el manifest
+        + Tener un service worker registrado 
+        + Utilizar una conexión segura (https)
+    - Además, la aplicación debe ser visitada por lo menos dos veces consecutivas con una diferencia de tiempo no mayor a 5 minutos para promptear al usuario con una push notification
+    - En iOS es necesario incluir meta tags adicionales en cada una de las páginas que van a mostrar la aplicación web
+        +  <meta name="apple-mobile-web-app-capable" content="yes"> -- Le dice a Safari que esto es una web app para que permita instalarla
+        + <meta name="apple-mobile-web-app-status-bar-style" content="black"> -- Le dice a Safari cuál es el estilo del status bar que buscamos para que parezca Standalone
+        + <meta name="apple-mobile-web-app-title" content="PWAGram"> -- Define el nombre de la aplicación que se mostrará debajo del ícono en el homepage
+    - Para Internet Explorer también existen algunas tags específicas
+        +  <meta name="msapplication-TileImage" content="/src/images/icons/app-icon-144x144.png""> -- Define el ícono que se guardará para Windows en el Homepage
+        + <meta name="msapplication-TileColor" content="#fff""> -- Define el color de fondo del ícono que se guardará en el Homepage
+        + <meta name="theme-color" content="#3f51b5"> -- Theme color del navegador
+
+/*----- Service Workers -----*/
+    - Javascript runs on a single thread attached to each individual HTML page
+    - Los service workers también son archivos de Javascript que corren en un solo hilo, pero que tienen acceso a otros features. No comparten el mismo thread que el JS que se ejecuta por las páginas HTML. Tienen su propio thread de ejecución porque corren en background y están desacoplados del código de HTML.
+    - Los service workers viven aún después de haber cerrado todas las páginas de un browser o incluso después de haber cerrado el browser. 
+    - Los service workers no pueden interactuar con el DOM.
+    - Lo que hacen es escuchar a eventos realizados por el código JS de la páginas o incluso al HTML y reaccionan a esos eventos. 
+    - Los eventos a los que puede reaccionar un service worker son:
+        + Fetch. http request a través del método fetch, esto es todas las peticiones en las que el browser realiza peticiones para cargar algún asset
+        + Push notifications. Son enviadas desde otro servidor web. Todos los browsers tienen un servidor que se encarga de enviar las push notifications, el service worker está escuchando porque vive en el background y puede levantar la notificación incluso cuando el navegador está cerrado y llevan al usuario de vuelta a la aplicación.
+        + Interacción con las notificaciones por parte del usuario.
+        + Background sync. Guardas una acción que no puede ser ejecutada en este momento y se ejecuta cuando se tenga conexión a internet de nuevo. 
+        + Service worker lifecycle
+
+/*----- Service Worker Lifecycle -----*/
+    - Si tenemos un proceso común en el cual nuestro HTML loads un archivo de Javascript, a través de este archivo es que nosotros podemos registrar nuestro service worker, para dejarle saber al navegador que ese proceso se debe ejecutar en el background y es independiente a la carga de la página o incluso al navegador. 
+    - Una vez que se ejecuta esa acción en el archivo Javascript se alcanza el primer estado dentro del ciclo de vida del SW, INSTALL EVENT (es util para hacer caché de algunos recursos)
+    - ACTIVATE EVENT, una vez que se instala el SW puede o no activarse, dependiendo de si existía una versión previa del mismo SW, en cuyo caso se debe esperar a que la página activa sea cerrada para sustituirlo y activar el nuevo SW
+    - ¿El navegador entonces vuelve a instalar y activar el SW cada vez que entro a la página? Depende, el navegador vuelve a instalar el SW sólo cuando éste ha cambiado
+    - El siguiente estado es IDLE en el que está inactivo en el background
+    - El siguiente estado es Terminated, no significa que fue eliminado o des registrado, sino que está como dormido y se despierta cada vez que se recibe un evento de los que espera escuchar
     - 
